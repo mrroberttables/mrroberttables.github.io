@@ -12,13 +12,39 @@ class BalancingAct {
 	workingNumberPool = [];
 
 	constructor(difficulty) {
-		this.newPuzzle(difficulty);
+		//this.newPuzzle(difficulty);
+	}
+
+	savePuzzle() {
+		let puzzle = {difficulty: this.difficulty, target: this.target, groupList: this.groupList, groupsCount: this.groupsCount, elementCount: this.elementCount, numbers: this.numbers, workingNumberPool: this.workingNumberPool, workingGroupsList: this.workingGroupsList};
+		
+		let puzzleString = JSON.stringify(puzzle);
+
+		localStorage.setItem('currentPuzzle', puzzleString);
+		localStorage.setItem('isSolved', this.solved);
+	}
+
+	loadPuzzle() {
+		let puzzle = JSON.parse(localStorage.getItem('currentPuzzle'));
+		if(puzzle != undefined && puzzle != null) {
+			this.difficulty = puzzle.difficulty;
+			this.target = puzzle.target;
+			this.groupList = puzzle.groupList;
+			this.groupsCount = puzzle.groupsCount;
+			this.elementCount = puzzle.elementCount;
+			this.numbers = puzzle.numbers;
+			this.workingNumberPool = puzzle.workingNumberPool;
+			this.workingGroupsList = puzzle.workingGroupsList;
+			this.solved = localStorage.getItem('isSolved') === 'true';
+		}
+
 	}
 
 	newPuzzle(difficulty) {
 		this.difficulty = difficulty;
 		//this.groupList = [];
 		this.createPuzzle();
+		this.savePuzzle();
 	}
 
 	createPuzzle() {

@@ -25,7 +25,7 @@ class Command {
 			}
 			else {
 				game.workingGroupsList[this.newGroup].push(this.value);
-			}		
+			}	
 	}
 
 	unexecute(game) {

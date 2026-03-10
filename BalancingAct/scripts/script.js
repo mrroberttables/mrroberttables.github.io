@@ -160,6 +160,7 @@ function startNewGame() {
     undoStack = [];
     redoStack = [];
     game = new BalancingAct(diff);
+    game.newPuzzle(diff);
     stats.addPlay(diff);
     displayGame();
     gameModal.style.display = "none";
@@ -199,9 +200,21 @@ function init() {
 
     toggleTheme();
 
-    //Remove after testing
-    var gameModal = document.getElementById("newGameModal");
-    gameModal.style.display = "block";
+    if(localStorage.getItem('currentPuzzle') != undefined && localStorage.getItem('currentPuzzle') != null && localStorage.getItem('isSolved') === 'false') {
+        game = new BalancingAct();
+        game.loadPuzzle();
+        displayGame();
+
+        let savedTime = localStorage.getItem('savedTime');
+        if(savedTime != undefined && savedTime != null) {
+            timer.setMilliseconds(parseInt(savedTime));
+        }
+        clockStart(timer);
+    }
+    else {
+        var gameModal = document.getElementById("newGameModal");
+        gameModal.style.display = "block";
+    }
 }
 
 
@@ -215,7 +228,16 @@ function moveNumber(value, oldGroup, newGroup) {
     //Check if they won the game
     if(game.checkResult()) {
         processWin();
-    }   
+    }
+
+    game.savePuzzle();
+    saveTime();
+
+}
+
+function saveTime() {
+    let time = timer.getMilliseconds();
+    localStorage.setItem('savedTime', time);
 }
 
 function moveFromClick(e, element) {
@@ -289,6 +311,9 @@ function undo() {
         move.unexecute(game);
         redoStack.push(move);
         displayGame();
+
+        game.savePuzzle();
+        saveTime();
     } 
 }
 
@@ -298,6 +323,9 @@ function redo() {
         move.execute(game);
         undoStack.push(move);
         displayGame();
+
+        game.savePuzzle();
+        saveTime();
     }
 }
 
