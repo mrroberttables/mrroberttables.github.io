@@ -73,6 +73,7 @@ function startTutorial() {
 	currentTime = timer.getMilliseconds();
 	timer.setTime(0);
 	game = new BalancingAct(0);
+	game.newPuzzle(0);
 	game.setPuzzle(0, 17, [[1,3,13],[2,7,8]], 2, 3, [1,2,3,7,8,13]);
 	displayGame();
 	updateClock();
